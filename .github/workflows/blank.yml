@@ -35,9 +35,20 @@ jobs:
 
       # 5. Se connecter à Docker Hub (Optionnel - pour push plus tard)
       # Pour l'instant on teste la construction de l'image en local sur la CI
-      - name: Build de l'image Docker
-        uses: docker/build-push-action@v5
+
+      # 1. Étape de connexion sécurisée (utilise les Secrets GitHub)
+      - name: Connexion à Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 2. Build ET Push de l'image
+      - name: Build et Push de l'image Docker
+        uses: docker/build-push-action@v6
         with:
           context: .
-          push: true # Mettre à true quand vous aurez configuré vos identifiants Docker Hub
-          tags: mon-user-docker/mon-app-spring:latest
+          push: true
+          # On utilise le secret pour le nom d'utilisateur dans le tag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockering:latest
+
