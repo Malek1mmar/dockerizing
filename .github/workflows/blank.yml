@@ -39,5 +39,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false # Mettre à true quand vous aurez configuré vos identifiants Docker Hub
+          push: true # Mettre à true quand vous aurez configuré vos identifiants Docker Hub
           tags: mon-user-docker/mon-app-spring:latest
