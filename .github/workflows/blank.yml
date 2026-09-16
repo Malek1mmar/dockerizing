@@ -50,5 +50,5 @@ jobs:
           context: .
           push: true
           # On utilise le secret pour le nom d'utilisateur dans le tag
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockering:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockerizing-demo:latest
 
