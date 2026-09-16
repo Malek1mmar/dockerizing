@@ -1,0 +1,43 @@
+name: Java Spring Boot CI/CD Pipeline
+
+# 1. Déclencheur : Quand ce pipeline doit-il tourner ?
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    name: Build Java & Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code source du dépôt Git
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      # 2. Configurer le JDK 21 sur la machine GitHub
+      - name: Configuration de Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven' # Active le cache automatique des dépendances Maven
+
+      # 3. Compiler et executer les tests unitaires (CI)
+      - name: Tests et Compilation Java
+        run: mvn clean test
+
+      # 4. Configurer Docker Buildx
+      - name: Configuration de Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 5. Se connecter à Docker Hub (Optionnel - pour push plus tard)
+      # Pour l'instant on teste la construction de l'image en local sur la CI
+      - name: Build de l'image Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false # Mettre à true quand vous aurez configuré vos identifiants Docker Hub
+          tags: mon-user-docker/mon-app-spring:latest
